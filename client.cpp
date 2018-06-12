@@ -4,10 +4,11 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include "client.h"
+#include "message.h"
 
-Client::Client(QString username)
+Client::Client()
+    :receivedMesssage_("","","")
 {
-    username_ = username;
     connect( &client_, &QTcpSocket::connected, this,
              [this](){
         sendLogin();
@@ -17,12 +18,14 @@ Client::Client(QString username)
     connect( &client_, &QTcpSocket::readyRead, this, [this](){
         QTcpSocket* readSocket = qobject_cast<QTcpSocket*>(sender());
         auto data = readSocket->readAll();
+        process(data);
         qDebug() << data;
     } );
 }
 
-void Client::connectToServer()
+void Client::connectToServer(QString username)
 {
+    username_ = username;
     qDebug() << "Connecting to server on adderss" << address_ << "and port: " << port_;
     client_.connectToHost(address_, port_);
 }
@@ -39,20 +42,18 @@ void Client::setClient(QHostAddress address, quint16 port)
     port_ = port;
 }
 
-void Client::sendMessage()
+void Client::sendMessage(QString receiver)
 {
     qDebug() << "Sending message: " << message_;
 
     QJsonObject messageObject;
     messageObject.insert("Id", QJsonValue::fromVariant("Message"));
     messageObject.insert("Sender", QJsonValue::fromVariant( username_ ));
-    messageObject.insert("Receiver", QJsonValue::fromVariant("User2"));
+    messageObject.insert("Receiver", QJsonValue::fromVariant(receiver));
     messageObject.insert("Message", QJsonValue::fromVariant( message_ ));
 
     QJsonDocument doc( messageObject );
     auto dataToSend = doc.toJson(QJsonDocument::Compact);
-
-    //const char* data = dataToSend.toLatin1();
     client_.write( dataToSend, dataToSend.length());
 }
 
@@ -79,4 +80,33 @@ void Client::sendLogin()
 
     //const char* data = dataToSend.toLatin1();
     client_.write( dataToSend, dataToSend.length());
+}
+
+void Client::process(QByteArray data)
+{
+    auto document = QJsonDocument::fromJson(data);
+    QJsonObject object = document.object();
+    if(isMessage(object)){
+        processMessage(object);
+    }
+}
+
+void Client::processMessage(QJsonObject object)
+{
+    auto message = object.value(QString("Message")).toString();
+    auto receiver = object.value(QString("Receiver")).toString();
+    auto sender = object.value(QString("Sender")).toString();
+    qDebug() << "Sender: " << sender << "Receiver: " << receiver << "Message: " << message;
+    Message recMesssage(sender, receiver, message);
+    receivedMesssage_ = recMesssage;
+    emit messageReceived();
+}
+
+bool Client::isMessage(const QJsonObject &obj) const
+{
+    auto message = obj.value(QString("Id"));
+    if(message.toString() == "Message")
+        return true;
+    else
+        return false;
 }
