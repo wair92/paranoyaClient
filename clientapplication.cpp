@@ -5,7 +5,7 @@
 #include "clientapplication.h"
 
 ClientApplication::ClientApplication(int argc, char *argv[])
-    :app_(argc, argv ),engine_(), client_()
+    :app_(argc, argv ),engine_(), client_("Martin")
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     engine_.load(QUrl(QStringLiteral("qrc:/main.qml")));
@@ -32,7 +32,7 @@ ClientApplication::ClientApplication(int argc, char *argv[])
 
     QHostAddress ip;
     ip.setAddress("127.0.0.1");
-    client_.setClient(ip,9006);
+    client_.setClient(ip,9009);
 }
 
 int ClientApplication::run()

@@ -5,10 +5,20 @@
 #include <QJsonDocument>
 #include "client.h"
 
-Client::Client()
+Client::Client(QString username)
 {
-    connect( &client_, &QTcpSocket::connected, this, &Client::connected);
+    username_ = username;
+    connect( &client_, &QTcpSocket::connected, this,
+             [this](){
+        sendLogin();
+        emit connected();
+    });
     connect( &client_, &QTcpSocket::disconnected, this, &Client::disconnected);
+    connect( &client_, &QTcpSocket::readyRead, this, [this](){
+        QTcpSocket* readSocket = qobject_cast<QTcpSocket*>(sender());
+        auto data = readSocket->readAll();
+        qDebug() << data;
+    } );
 }
 
 void Client::connectToServer()
@@ -34,7 +44,8 @@ void Client::sendMessage()
     qDebug() << "Sending message: " << message_;
 
     QJsonObject messageObject;
-    messageObject.insert("Sender", QJsonValue::fromVariant("User1"));
+    messageObject.insert("Id", QJsonValue::fromVariant("Message"));
+    messageObject.insert("Sender", QJsonValue::fromVariant( username_ ));
     messageObject.insert("Receiver", QJsonValue::fromVariant("User2"));
     messageObject.insert("Message", QJsonValue::fromVariant( message_ ));
 
@@ -53,4 +64,19 @@ QString Client::getMessage() const
 void Client::setMessage(const QString &message)
 {
     message_ = message;
+}
+
+void Client::sendLogin()
+{
+    qDebug() << "Sending login: " << username_;
+
+    QJsonObject loginObject;
+    loginObject.insert("Id", QJsonValue::fromVariant("Login"));
+    loginObject.insert("Login", QJsonValue::fromVariant(username_));
+
+    QJsonDocument doc( loginObject );
+    auto dataToSend = doc.toJson(QJsonDocument::Compact);
+
+    //const char* data = dataToSend.toLatin1();
+    client_.write( dataToSend, dataToSend.length());
 }

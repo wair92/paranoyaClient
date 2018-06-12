@@ -10,7 +10,7 @@ class Client: public QObject
     Q_OBJECT
 
 public:
-    Client();
+    Client(QString username);
     virtual ~Client() = default;
     void setClient(QHostAddress address, quint16 port);
     QString getMessage() const;
@@ -27,10 +27,12 @@ public slots:
     void setMessage(const QString& message);
 
 private:
+    void sendLogin();
     QTcpSocket client_;
     QHostAddress address_;
     quint16 port_;
     QString message_;
+    QString username_;
 };
 
 #endif // CLIENT_H
