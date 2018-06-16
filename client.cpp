@@ -21,6 +21,9 @@ Client::Client()
         process(data);
         qDebug() << data;
     } );
+    heartbeat_.setInterval(5000);
+    connect(&heartbeat_, &QTimer::timeout, this, &Client::sendHeartBeat);
+
 }
 
 void Client::connectToServer(QString username)
@@ -28,11 +31,17 @@ void Client::connectToServer(QString username)
     username_ = username;
     qDebug() << "Connecting to server on adderss" << address_ << "and port: " << port_;
     client_.connectToHost(address_, port_);
+    if( client_.isOpen() ){
+        heartbeat_.start();
+    }
 }
 
 void Client::disconnectToServer()
 {
+    qDebug() << "Logging out";
+    sendLogout();
     qDebug() << "Disconnecting ...";
+    heartbeat_.stop();
     client_.disconnectFromHost();
 }
 
@@ -82,6 +91,34 @@ void Client::sendLogin()
     client_.write( dataToSend, dataToSend.length());
 }
 
+void Client::sendLogout()
+{
+    qDebug() << "Sending logout: " << username_;
+
+    QJsonObject loginObject;
+    loginObject.insert("Id", QJsonValue::fromVariant("Logout"));
+    loginObject.insert("Logout", QJsonValue::fromVariant(username_));
+
+    QJsonDocument doc( loginObject );
+    auto dataToSend = doc.toJson(QJsonDocument::Compact);
+
+    client_.write( dataToSend, dataToSend.length());
+}
+
+void Client::sendHeartBeat()
+{
+    qDebug() << "Sending Heartbeat: " << username_;
+
+    QJsonObject loginObject;
+    loginObject.insert("Id", QJsonValue::fromVariant("HeartBeat"));
+    loginObject.insert("HeartBeat", QJsonValue::fromVariant(username_));
+
+    QJsonDocument doc( loginObject );
+    auto dataToSend = doc.toJson(QJsonDocument::Compact);
+
+    client_.write( dataToSend, dataToSend.length());
+}
+
 void Client::process(QByteArray data)
 {
     auto document = QJsonDocument::fromJson(data);
@@ -110,3 +147,5 @@ bool Client::isMessage(const QJsonObject &obj) const
     else
         return false;
 }
+
+

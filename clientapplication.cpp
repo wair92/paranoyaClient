@@ -12,7 +12,6 @@ ClientApplication::ClientApplication(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     engine_.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
-
 //    auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
     reconnect();
 
@@ -22,11 +21,12 @@ ClientApplication::ClientApplication(int argc, char *argv[])
         auto *messageInput = engine_.rootObjects()[0]->findChild<QObject *>("messageInput");
         auto *history = engine_.rootObjects()[0]->findChild<QObject *>("history");
 
-
         connect(disconnectToServer, SIGNAL(disconnectionClicked()), &client_, SLOT(disconnectToServer()));
         connect(disconnectToServer, SIGNAL(disconnectionClicked()), this, SLOT(reconnect()));
         connect(sendMessage, SIGNAL(sendMessageClicked(QString)), &client_, SLOT(sendMessage(QString)));
         connect(messageInput, SIGNAL(messageChangedd(QString)), &client_, SLOT(setMessage(QString)));
+        auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
+        disconnect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)) );
 
         connect(&client_, &Client::messageReceived, this, [this, history](){
             qDebug() << "Message received";
@@ -38,16 +38,13 @@ ClientApplication::ClientApplication(int argc, char *argv[])
             qDebug() << "Final Text: " << text;
             QQmlProperty::write(history, "historyText", text);
         });
-
-
     });
 
    // connect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)));
 
-
     QHostAddress ip;
     ip.setAddress("127.0.0.1");
-    client_.setClient(ip,9009);
+    client_.setClient(ip,9008);
 }
 
 int ClientApplication::run()
@@ -61,3 +58,5 @@ void ClientApplication::reconnect()
     auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
     connect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)));
 }
+
+

@@ -4,6 +4,7 @@
 #include <QTcpSocket>
 #include <QHostAddress>
 #include <QDebug>
+#include <QTimer>
 #include "message.h"
 
 class Client: public QObject
@@ -31,15 +32,22 @@ public slots:
 
 private:
     void sendLogin();
+    void sendLogout();
+    void sendMessageReceivedConfirmation();
+    void sendHeartBeat();
+
     void process(QByteArray data);
     void processMessage( QJsonObject object );
     bool isMessage(const QJsonObject& obj) const;
+
+private:
     QTcpSocket client_;
     QHostAddress address_;
     quint16 port_;
     QString message_;
     QString username_;
     Message receivedMesssage_;
+    QTimer heartbeat_;
 };
 
 #endif // CLIENT_H

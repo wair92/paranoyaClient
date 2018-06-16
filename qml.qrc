@@ -4,5 +4,6 @@
         <file>Login.qml</file>
         <file>Chat.qml</file>
         <file>ChatsList.qml</file>
+        <file>Connecting.qml</file>
     </qresource>
 </RCC>
