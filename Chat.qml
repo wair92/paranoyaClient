@@ -28,9 +28,7 @@ Item{
                     onClicked: {
                         parent.color = "yellow"
                         disText.color = "black"
-                        stackView.pop(null);
-                        stackView.push("qrc:/Login.qml")
-
+                        stackView.pop();
                         disconnectToServer.disconnectionClicked()
 
                     }

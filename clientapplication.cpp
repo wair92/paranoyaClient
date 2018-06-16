@@ -12,8 +12,9 @@ ClientApplication::ClientApplication(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     engine_.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
-//    auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
-    reconnect();
+    auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
+    connect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)));
+    //reconnect();
 
     connect(&client_, &Client::connected, this, [this](){
         auto *disconnectToServer = engine_.rootObjects()[0]->findChild<QObject *>("disconnectToServer");
@@ -22,7 +23,7 @@ ClientApplication::ClientApplication(int argc, char *argv[])
         auto *history = engine_.rootObjects()[0]->findChild<QObject *>("history");
 
         connect(disconnectToServer, SIGNAL(disconnectionClicked()), &client_, SLOT(disconnectToServer()));
-        connect(disconnectToServer, SIGNAL(disconnectionClicked()), this, SLOT(reconnect()));
+        //connect(disconnectToServer, SIGNAL(disconnectionClicked()), this, SLOT(reconnect()));
         connect(sendMessage, SIGNAL(sendMessageClicked(QString)), &client_, SLOT(sendMessage(QString)));
         connect(messageInput, SIGNAL(messageChangedd(QString)), &client_, SLOT(setMessage(QString)));
         auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
@@ -38,13 +39,16 @@ ClientApplication::ClientApplication(int argc, char *argv[])
             qDebug() << "Final Text: " << text;
             QQmlProperty::write(history, "historyText", text);
         });
-    });
 
-   // connect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)));
+        connect(&client_, &Client::disconnected, this, [this](){
+            reconnect();
+        });
+
+    });
 
     QHostAddress ip;
     ip.setAddress("127.0.0.1");
-    client_.setClient(ip,9008);
+    client_.setClient(ip,9007);
 }
 
 int ClientApplication::run()

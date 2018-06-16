@@ -6,17 +6,6 @@ import QtQuick.Controls 1.4
 
 Item {
 
-    Rectangle{
-        property string indicatorColor: "gray"
-        id: indicator
-        objectName: "indicator"
-        anchors.right: parent.right
-        width: 20
-        height: 20
-        color: indicatorColor
-        anchors.top: parent.top
-    }
-
     GridLayout{
         id: loginContainer
         width: parent.width
@@ -51,8 +40,6 @@ Item {
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                    parent.color = "blue"
-                    stackView.pop();
                     stackView.push("qrc:/Chat.qml")
                     connectToServer.connectionClicked(username.text)
                 }
