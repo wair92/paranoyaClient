@@ -10,7 +10,6 @@
 class Client: public QObject
 {
     Q_OBJECT
-
 public:
     Client();
     virtual ~Client() = default;
@@ -23,6 +22,7 @@ signals:
     void disconnected();
     void messageChangedd(QString message);
     void messageReceived();
+    void connectionConfirmed();
 
 public slots:
     void connectToServer(QString username);
@@ -37,8 +37,11 @@ private:
     void sendHeartBeat();
 
     void process(QByteArray data);
-    void processMessage( QJsonObject object );
+    void processMessage( const QJsonObject& object );
+    void processLoginConfirm( const QJsonObject& object );
+
     bool isMessage(const QJsonObject& obj) const;
+    bool isLoginConfirm(const QJsonObject& obj) const;
 
 private:
     QTcpSocket client_;

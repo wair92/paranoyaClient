@@ -14,6 +14,10 @@ Item{
             id: afterLoginContainer
             visible: logged
 
+            Label{
+                id: username
+                text: "uname"
+            }
 
             Rectangle{
                 id: disconnectToServer
@@ -28,7 +32,7 @@ Item{
                     onClicked: {
                         parent.color = "yellow"
                         disText.color = "black"
-                        stackView.pop();
+                        stackView.pop(null);
                         disconnectToServer.disconnectionClicked()
 
                     }
@@ -90,7 +94,6 @@ Item{
                         sendText.sendMessageClicked(receiver.text)
                         history.historyText = history.historyText.concat(messageInput.text)
                         history.historyText = history.historyText.concat("\n")
-                        //historyText = history.text
                     }
                 }
 

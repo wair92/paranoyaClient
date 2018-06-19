@@ -5,6 +5,17 @@
 #include <QQmlApplicationEngine>
 #include "client.h"
 
+class Helper: public QObject{
+    //Class for calling qml function
+    Q_OBJECT
+public:
+    Helper() = default;
+    virtual ~Helper() = default;
+    using QObject::QObject;
+signals:
+   void connectionConfirmed();
+};
+
 class ClientApplication: public QObject
 {
     Q_OBJECT
@@ -15,10 +26,10 @@ public:
 private slots:
     void reconnect();
 private:
-    //QObject * connectToServer = { nullptr };
     QGuiApplication app_;
     QQmlApplicationEngine engine_;
     Client client_;
+    Helper helper_;
 };
 
 #endif // CLIENTAPPLICATION_H

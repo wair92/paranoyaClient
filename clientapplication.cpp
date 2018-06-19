@@ -2,6 +2,8 @@
 #include <QQmlApplicationEngine>
 #include <QQmlProperty>
 #include <QDebug>
+#include <QQmlComponent>
+#include <QQmlContext>
 
 #include "clientapplication.h"
 #include "message.h"
@@ -14,18 +16,21 @@ ClientApplication::ClientApplication(int argc, char *argv[])
 
     auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
     connect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)));
-    //reconnect();
 
-    connect(&client_, &Client::connected, this, [this](){
+    //emit signal after confirmed connection
+    engine_.rootContext()->setContextProperty("helper", &helper_);
+    connect(&client_, &Client::connectionConfirmed, this, [this](){
+        emit helper_.connectionConfirmed();
         auto *disconnectToServer = engine_.rootObjects()[0]->findChild<QObject *>("disconnectToServer");
         auto *sendMessage = engine_.rootObjects()[0]->findChild<QObject *>("sendText");
         auto *messageInput = engine_.rootObjects()[0]->findChild<QObject *>("messageInput");
-        auto *history = engine_.rootObjects()[0]->findChild<QObject *>("history");
+
 
         connect(disconnectToServer, SIGNAL(disconnectionClicked()), &client_, SLOT(disconnectToServer()));
-        //connect(disconnectToServer, SIGNAL(disconnectionClicked()), this, SLOT(reconnect()));
         connect(sendMessage, SIGNAL(sendMessageClicked(QString)), &client_, SLOT(sendMessage(QString)));
         connect(messageInput, SIGNAL(messageChangedd(QString)), &client_, SLOT(setMessage(QString)));
+
+        auto *history = engine_.rootObjects()[0]->findChild<QObject *>("history");
         auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
         disconnect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)) );
 
@@ -36,19 +41,18 @@ ClientApplication::ClientApplication(int argc, char *argv[])
             text = text.append(":");
             text = text.append(client_.getReceivedMessage().getMessage());
             text = text.append("\n");
-            qDebug() << "Final Text: " << text;
             QQmlProperty::write(history, "historyText", text);
         });
 
         connect(&client_, &Client::disconnected, this, [this](){
             reconnect();
         });
-
     });
+
 
     QHostAddress ip;
     ip.setAddress("127.0.0.1");
-    client_.setClient(ip,9007);
+    client_.setClient(ip,9006);
 }
 
 int ClientApplication::run()

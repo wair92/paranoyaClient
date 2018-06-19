@@ -4,6 +4,10 @@ import QtQuick.Layouts 1.11
 import QtQuick.Controls 1.4
 
 Item {
+    id: mainItem
+    function connectionConfirmed() {
+        stackView.push("qrc:/Chat.qml")
+    }
     ColumnLayout{
         Layout.preferredHeight: 50
         Layout.preferredWidth: parent.width
@@ -14,6 +18,14 @@ Item {
         }
         Button{
             text: "Cancel"
+            onClicked: {
+                stackView.pop();
+            }
+        }
+        Connections{
+            target: helper
+            onConnectionConfirmed: mainItem.connectionConfirmed()
         }
     }
+
 }

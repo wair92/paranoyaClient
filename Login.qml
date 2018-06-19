@@ -40,7 +40,7 @@ Item {
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                    stackView.push("qrc:/Chat.qml")
+                    stackView.push("qrc:/Connecting.qml")
                     connectToServer.connectionClicked(username.text)
                 }
             }

@@ -126,9 +126,12 @@ void Client::process(QByteArray data)
     if(isMessage(object)){
         processMessage(object);
     }
+    if(isLoginConfirm(object)){
+        processLoginConfirm(object);
+    }
 }
 
-void Client::processMessage(QJsonObject object)
+void Client::processMessage(const QJsonObject& object)
 {
     auto message = object.value(QString("Message")).toString();
     auto receiver = object.value(QString("Receiver")).toString();
@@ -139,10 +142,26 @@ void Client::processMessage(QJsonObject object)
     emit messageReceived();
 }
 
+void Client::processLoginConfirm(const QJsonObject &object)
+{
+    auto username = object.value(QString("Username")).toString();
+    qDebug() << username << "sucessfully logged in";
+    emit connectionConfirmed();
+}
+
 bool Client::isMessage(const QJsonObject &obj) const
 {
     auto message = obj.value(QString("Id"));
     if(message.toString() == "Message")
+        return true;
+    else
+        return false;
+}
+
+bool Client::isLoginConfirm(const QJsonObject &obj) const
+{
+    auto message = obj.value(QString("Id"));
+    if(message.toString() == "LoginConfirm")
         return true;
     else
         return false;
