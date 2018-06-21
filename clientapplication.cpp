@@ -12,7 +12,7 @@ ClientApplication::ClientApplication(int argc, char *argv[])
     :app_(argc, argv ),engine_(), client_()
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    engine_.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    engine_.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 
     auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
     connect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)));
@@ -52,7 +52,7 @@ ClientApplication::ClientApplication(int argc, char *argv[])
 
     QHostAddress ip;
     ip.setAddress("127.0.0.1");
-    client_.setClient(ip,9006);
+    client_.setClient(ip,9000);
 }
 
 int ClientApplication::run()

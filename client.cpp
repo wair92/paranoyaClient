@@ -21,7 +21,7 @@ Client::Client()
         process(data);
         qDebug() << data;
     } );
-    heartbeat_.setInterval(5000);
+    heartbeat_.setInterval(1000);
     connect(&heartbeat_, &QTimer::timeout, this, &Client::sendHeartBeat);
 
 }
