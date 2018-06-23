@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>Login.qml</file>
-        <file>Chat.qml</file>
-        <file>ChatsList.qml</file>
-        <file>Connecting.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/Login.qml</file>
+        <file>qml/Chat.qml</file>
+        <file>qml/ChatsList.qml</file>
+        <file>qml/Connecting.qml</file>
     </qresource>
 </RCC>

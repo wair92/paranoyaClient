@@ -16,12 +16,12 @@ signals:
    void connectionConfirmed();
 };
 
-class ClientApplication: public QObject
+class ClientGUIApplication: public QObject
 {
     Q_OBJECT
 public:
-    ClientApplication(int argc, char *argv[]);
-    virtual ~ClientApplication() = default;
+    ClientGUIApplication(int argc, char *argv[]);
+    virtual ~ClientGUIApplication() = default;
     int run();
 private slots:
     void reconnect();

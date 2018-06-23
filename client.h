@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QTimer>
 #include "message.h"
+#include "configloader.h"
 
 class Client: public QObject
 {
@@ -44,6 +45,7 @@ private:
     bool isLoginConfirm(const QJsonObject& obj) const;
 
 private:
+    ConfigLoader config_;
     QTcpSocket client_;
     QHostAddress address_;
     quint16 port_;

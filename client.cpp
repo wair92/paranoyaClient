@@ -7,8 +7,14 @@
 #include "message.h"
 
 Client::Client()
-    :receivedMesssage_("","","")
+    :receivedMesssage_("","",""),
+      config_("config.json")
 {
+    QHostAddress ip;
+    ip.setAddress(config_.getIp());
+    qDebug() << "XXX" << config_.getPort();
+    setClient(ip, config_.getPort());
+
     connect( &client_, &QTcpSocket::connected, this,
              [this](){
         sendLogin();
@@ -21,9 +27,6 @@ Client::Client()
         process(data);
         qDebug() << data;
     } );
-    heartbeat_.setInterval(1000);
-    connect(&heartbeat_, &QTimer::timeout, this, &Client::sendHeartBeat);
-
 }
 
 void Client::connectToServer(QString username)
@@ -31,9 +34,6 @@ void Client::connectToServer(QString username)
     username_ = username;
     qDebug() << "Connecting to server on adderss" << address_ << "and port: " << port_;
     client_.connectToHost(address_, port_);
-    if( client_.isOpen() ){
-        heartbeat_.start();
-    }
 }
 
 void Client::disconnectToServer()
@@ -145,7 +145,13 @@ void Client::processMessage(const QJsonObject& object)
 void Client::processLoginConfirm(const QJsonObject &object)
 {
     auto username = object.value(QString("Username")).toString();
-    qDebug() << username << "sucessfully logged in";
+    auto heartBeat = object.value(QString("HeartBeatTimer")).toInt();
+    qDebug() << username << "sucessfully logged in" << "heartbeatTimer set to:" << heartBeat;
+    if(heartBeat != 0){
+        heartbeat_.setInterval(heartBeat);
+        connect(&heartbeat_, &QTimer::timeout, this, &Client::sendHeartBeat);
+        heartbeat_.start();
+    }
     emit connectionConfirmed();
 }
 

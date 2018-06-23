@@ -5,10 +5,10 @@
 #include <QQmlComponent>
 #include <QQmlContext>
 
-#include "clientapplication.h"
+#include "clientguiapplication.h"
 #include "message.h"
 
-ClientApplication::ClientApplication(int argc, char *argv[])
+ClientGUIApplication::ClientGUIApplication(int argc, char *argv[])
     :app_(argc, argv ),engine_(), client_()
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -48,19 +48,14 @@ ClientApplication::ClientApplication(int argc, char *argv[])
             reconnect();
         });
     });
-
-
-    QHostAddress ip;
-    ip.setAddress("127.0.0.1");
-    client_.setClient(ip,9000);
 }
 
-int ClientApplication::run()
+int ClientGUIApplication::run()
 {
     return app_.exec();
 }
 
-void ClientApplication::reconnect()
+void ClientGUIApplication::reconnect()
 {
     qDebug() << "Reconnect";
     auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
