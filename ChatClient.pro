@@ -28,9 +28,9 @@ QML_IMPORT_PATH =
 QML_DESIGNER_IMPORT_PATH =
 
 # Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+#qnx: target.path = /tmp/$${TARGET}/bin
+#else: unix:!android: target.path = /opt/$${TARGET}/bin
+#!isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
     client.h \
@@ -41,4 +41,17 @@ HEADERS += \
 DISTFILES += \
     README.MD \
     config.json
+
+macx: {
+    copydata.commands = $(COPY) $$PWD/config.json $$OUT_PWD/ChatClient.app/Contents/MacOS
+}
+
+unix:!macx {
+     copydata.commands = $(COPY) $$PWD/config.json $$OUT_PWD/
+}
+
+first.depends = $(first) copydata
+export(first.depends)
+export(copydata.commands)
+QMAKE_EXTRA_TARGETS += first copydata
 
