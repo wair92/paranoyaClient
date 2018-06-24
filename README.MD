@@ -1,67 +1,82 @@
-###### Paranoya Chat Client
+# Paranoya Chat Client
 
 ### Screenshots
 
-#Login Screen
+###### Login Screen
 
 ### Config
 Configuration is set in config.json, which must be loacated in the same directory as running binary of application. On the client side 2 variables cen be set:
-    {
-        "Ip": "127.0.0.1",
-        "Port": 9000
-    }
-
+```
+{
+    "Ip": "127.0.0.1",
+    "Port": 9000
+}
+```
 ### Messages to Server
 
-#Login
-    {
-        "Id": "Login",
-        "Login": "UserName"
-    }
+###### Login
 
-#Message
-    {
-        "Id": "Message",
-        "Sender": "UserName1"
-        "Receiver": "UserName2"
-        "Message": "Message to send"
-    }
+```
+{
+    "Id": "Login",
+    "Login": "UserName"
+}
+```
 
-#Logout
-    {
-        "Id": "Logout",
-        "Logout": "UserName"
-    }
+###### Message
+```
+{
+    "Id": "Message",
+    "Sender": "UserName1"
+    "Receiver": "UserName2"
+    "Message": "Message to send"
+}
+```
 
-#HearBeat
-    {
-        "Id": "HeartBeat",
-        "UserName": "UserName"
-    }
+###### Logout
+```
+{
+    "Id": "Logout",
+    "Logout": "UserName"
+}
+```
+
+###### HearBeat
+``````
+{
+    "Id": "HeartBeat",
+    "UserName": "UserName"
+}
+``````
 
 ### Messages from Server
 
-#Message
-    {
-        "Id": "Message",
-        "Sender": "UserName1"
-        "Receiver": "UserName2"
-        "Message": "Message to send"
-    }
+###### Message
+```
+{
+    "Id": "Message",
+    "Sender": "UserName1"
+    "Receiver": "UserName2"
+    "Message": "Message to send"
+}
+```
 
-#LoginConfirm
-    {
-        "Id": "Message",
-        "UserName": "UserName"
-        "HeartBeatTimer": 1000
-    }
+###### LoginConfirm
+```
+{
+    "Id": "Message",
+    "UserName": "UserName"
+    "HeartBeatTimer": 1000
+}
+```
 
-#HeartBeatBack
-    {
-        "Id": "HeartBeatBack",
-        "UserName": "UserName"
-    }
-
+###### HeartBeatBack
+```
+{
+    "Id": "HeartBeatBack",
+    "UserName": "UserName"
+}
+```
 ### Author
 
 martin.bednar@yandex.ru
