@@ -3,7 +3,7 @@
         <file>qml/main.qml</file>
         <file>qml/Login.qml</file>
         <file>qml/Chat.qml</file>
-        <file>qml/ChatsList.qml</file>
         <file>qml/Connecting.qml</file>
+        <file>qml/ChatAndUserList.qml</file>
     </qresource>
 </RCC>

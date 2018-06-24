@@ -3,6 +3,7 @@
 #include <QQuickItem>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QJsonArray>
 #include "client.h"
 #include "message.h"
 
@@ -117,6 +118,19 @@ void Client::sendHeartBeat()
     auto dataToSend = doc.toJson(QJsonDocument::Compact);
 
     client_.write( dataToSend, dataToSend.length());
+
+}
+
+void Client::askForUserList()
+{
+    qDebug() << username_ << "is asking for user list: ";
+
+    QJsonObject message;
+    message.insert("Id", QJsonValue::fromVariant("UserList"));
+    message.insert("Username", QJsonValue::fromVariant(username_));
+    QJsonDocument doc( message );
+    auto dataToSend = doc.toJson(QJsonDocument::Compact);
+    client_.write( dataToSend, dataToSend.length());
 }
 
 void Client::process(QByteArray data)
@@ -128,6 +142,9 @@ void Client::process(QByteArray data)
     }
     if(isLoginConfirm(object)){
         processLoginConfirm(object);
+    }
+    if(isUserList(object)){
+        processUserList(object);
     }
 }
 
@@ -152,7 +169,18 @@ void Client::processLoginConfirm(const QJsonObject &object)
         connect(&heartbeat_, &QTimer::timeout, this, &Client::sendHeartBeat);
         heartbeat_.start();
     }
+    //askForUserList();
     emit connectionConfirmed();
+}
+
+void Client::processUserList(const QJsonObject &object)
+{
+    qDebug() << "UserList: ";
+    QJsonArray message = object.value(QString("Users")).toArray();
+    for( const auto& i : message){
+        qDebug() << "User: " << i;
+    }
+
 }
 
 bool Client::isMessage(const QJsonObject &obj) const
@@ -168,6 +196,15 @@ bool Client::isLoginConfirm(const QJsonObject &obj) const
 {
     auto message = obj.value(QString("Id"));
     if(message.toString() == "LoginConfirm")
+        return true;
+    else
+        return false;
+}
+
+bool Client::isUserList(const QJsonObject &obj) const
+{
+    auto message = obj.value(QString("Id"));
+    if(message.toString() == "UserListResponse")
         return true;
     else
         return false;

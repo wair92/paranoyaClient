@@ -36,13 +36,16 @@ private:
     void sendLogout();
     void sendMessageReceivedConfirmation();
     void sendHeartBeat();
+    void askForUserList();
 
     void process(QByteArray data);
     void processMessage( const QJsonObject& object );
     void processLoginConfirm( const QJsonObject& object );
+    void processUserList(const QJsonObject& object);
 
     bool isMessage(const QJsonObject& obj) const;
     bool isLoginConfirm(const QJsonObject& obj) const;
+    bool isUserList(const QJsonObject& obj) const;
 
 private:
     ConfigLoader config_;
