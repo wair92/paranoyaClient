@@ -5,26 +5,38 @@ import QtQuick.Controls 1.4
 
 
 Item {
-
+    anchors.leftMargin: 10
     GridLayout{
         id: loginContainer
+        anchors.centerIn: parent
         width: parent.width
         Layout.preferredHeight:  parent.height
         rows: 6
         columns: 1
         visible: true
+
         Text{
             text: "Username:"
             Layout.preferredWidth: parent.width
             Layout.preferredHeight: 25
+            horizontalAlignment: Text.AlignHCenter
         }
 
-        TextInput{
+        TextEdit{
             id: username
             objectName: "username"
-            text: "YourUserName"
+            //text: "YourUserName"
+            property string placeholderText: "Enter your username "
+            Text {
+                text: username.placeholderText
+                color: "#aaa"
+                visible: !username.text
+                horizontalAlignment: Text.AlignHCenter
+                anchors.centerIn: parent
+            }
             Layout.preferredWidth: parent.width
             Layout.preferredHeight: 25
+            horizontalAlignment: Text.AlignHCenter
         }
 
         Rectangle{
@@ -33,7 +45,6 @@ Item {
             signal connectionClicked(string username)
             color: "red"
             Layout.fillWidth: true
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Layout.preferredHeight: 25
             Layout.preferredWidth: parent.width
 
@@ -50,6 +61,7 @@ Item {
                 color: "white"
                 height: parent.height
                 width: parent.width
+                horizontalAlignment: Text.AlignHCenter
             }
         }
     }
