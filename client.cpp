@@ -4,6 +4,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QVector>
 #include "client.h"
 #include "message.h"
 
@@ -88,7 +89,6 @@ void Client::sendLogin()
     QJsonDocument doc( loginObject );
     auto dataToSend = doc.toJson(QJsonDocument::Compact);
 
-    //const char* data = dataToSend.toLatin1();
     client_.write( dataToSend, dataToSend.length());
 }
 
@@ -131,6 +131,11 @@ void Client::askForUserList()
     QJsonDocument doc( message );
     auto dataToSend = doc.toJson(QJsonDocument::Compact);
     client_.write( dataToSend, dataToSend.length());
+}
+
+void Client::setReceiver(QString receiver)
+{
+    receiver_ = receiver;
 }
 
 void Client::process(QByteArray data)
@@ -177,9 +182,13 @@ void Client::processUserList(const QJsonObject &object)
 {
     qDebug() << "UserList: ";
     QJsonArray message = object.value(QString("Users")).toArray();
+    QVector<QString> users;
     for( const auto& i : message){
         qDebug() << "User: " << i;
+        users.push_back(i.toString());
     }
+
+    emit userListProcessed(users);
 
 }
 

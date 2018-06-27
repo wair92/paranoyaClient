@@ -43,7 +43,7 @@ Item {
             id: connectToServer
             objectName: "connectToServer"
             signal connectionClicked(string username)
-            color: "red"
+            color: "#343537"
             Layout.fillWidth: true
             Layout.preferredHeight: 25
             Layout.preferredWidth: parent.width

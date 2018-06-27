@@ -6,7 +6,7 @@ import QtQuick.Controls 1.4
 Item {
     id: mainItem
     function connectionConfirmed() {
-        stackView.push("qrc:/qml/Chat.qml")
+        stackView.push("qrc:/qml/ChatAndUserList.qml")
     }
     ColumnLayout{
         Layout.preferredHeight: 50

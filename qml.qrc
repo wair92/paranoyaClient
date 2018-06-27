@@ -5,5 +5,7 @@
         <file>qml/Chat.qml</file>
         <file>qml/Connecting.qml</file>
         <file>qml/ChatAndUserList.qml</file>
+        <file>qml/Users.qml</file>
+        <file>qml/Messages.qml</file>
     </qresource>
 </RCC>

@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QQmlComponent>
 #include <QQmlContext>
+#include <QVector>
 
 #include "clientguiapplication.h"
 #include "message.h"
@@ -17,22 +18,39 @@ ClientGUIApplication::ClientGUIApplication(int argc, char *argv[])
     auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
     connect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)));
 
+
     //emit signal after confirmed connection
     engine_.rootContext()->setContextProperty("helper", &helper_);
     connect(&client_, &Client::connectionConfirmed, this, [this](){
-        emit helper_.connectionConfirmed();
+
         auto *disconnectToServer = engine_.rootObjects()[0]->findChild<QObject *>("disconnectToServer");
         auto *sendMessage = engine_.rootObjects()[0]->findChild<QObject *>("sendText");
         auto *messageInput = engine_.rootObjects()[0]->findChild<QObject *>("messageInput");
 
 
-        connect(disconnectToServer, SIGNAL(disconnectionClicked()), &client_, SLOT(disconnectToServer()));
+        /*connect(disconnectToServer, SIGNAL(disconnectionClicked()), &client_, SLOT(disconnectToServer()));
         connect(sendMessage, SIGNAL(sendMessageClicked(QString)), &client_, SLOT(sendMessage(QString)));
-        connect(messageInput, SIGNAL(messageChangedd(QString)), &client_, SLOT(setMessage(QString)));
+        connect(messageInput, SIGNAL(messageChangedd(QString)), &client_, SLOT(setMessage(QString)));*/
 
         auto *history = engine_.rootObjects()[0]->findChild<QObject *>("history");
         auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
         disconnect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)) );
+
+        client_.askForUserList();
+//        auto *getUserList = engine_.rootObjects()[0]->findChild<QObject *>("userList");
+//      connect(getUserList, SIGNAL(getUserList()), &client_, SLOT(askForUserList()));
+
+        connect(&client_, &Client::userListProcessed, this, [this]( QVector<QString> users ){
+                QStringList dataList;
+                for(const QString i: users){
+                    dataList.push_back(i);
+                }
+                engine_.rootContext()->setContextProperty("myModel", QVariant::fromValue(dataList));
+                emit helper_.connectionConfirmed();
+        });
+
+        cauto *setReceiver = engine_.rootObjects()[0]->findChild<QObject *>("setReceiver");
+        connect(setReceiver, SIGNAL(setReceiver(QString)), &client_, SLOT(connectToServer(QString)));
 
         connect(&client_, &Client::messageReceived, this, [this, history](){
             qDebug() << "Message received";

@@ -24,19 +24,22 @@ signals:
     void messageChangedd(QString message);
     void messageReceived();
     void connectionConfirmed();
+    void userListProcessed(QVector<QString> users);
 
 public slots:
     void connectToServer(QString username);
     void disconnectToServer();
     void sendMessage(QString receiver);
     void setMessage(const QString& message);
+    void askForUserList();
+    void setReceiver(QString receiver);
 
 private:
     void sendLogin();
     void sendLogout();
     void sendMessageReceivedConfirmation();
     void sendHeartBeat();
-    void askForUserList();
+
 
     void process(QByteArray data);
     void processMessage( const QJsonObject& object );
@@ -56,6 +59,7 @@ private:
     QString username_;
     Message receivedMesssage_;
     QTimer heartbeat_;
+    QString receiver_;
 };
 
 #endif // CLIENT_H
