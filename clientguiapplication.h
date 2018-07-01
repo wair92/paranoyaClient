@@ -4,6 +4,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include "client.h"
+#include "messagehistoryloader.h"
 
 class Helper: public QObject{
     //Class for calling qml function
@@ -30,6 +31,7 @@ private:
     QQmlApplicationEngine engine_;
     Client client_;
     Helper helper_;
+    MessageHistoryLoader messageHistoryLoader_;
 };
 
 #endif // CLIENTAPPLICATION_H

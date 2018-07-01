@@ -5,22 +5,23 @@
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QVector>
+#include <QStringList>
 
 #include "clientguiapplication.h"
 #include "message.h"
 
 ClientGUIApplication::ClientGUIApplication(int argc, char *argv[])
-    :app_(argc, argv ),engine_(), client_()
+    :app_(argc, argv ),engine_(), client_(), messageHistoryLoader_("message_history.json")
 {
+    messageHistoryLoader_.loadMessages();
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     engine_.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 
     auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
     connect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)));
 
-
-    //emit signal after confirmed connection
     engine_.rootContext()->setContextProperty("helper", &helper_);
+
     connect(&client_, &Client::connectionConfirmed, this, [this](){
 
         auto *disconnectToServer = engine_.rootObjects()[0]->findChild<QObject *>("disconnectToServer");
@@ -36,9 +37,7 @@ ClientGUIApplication::ClientGUIApplication(int argc, char *argv[])
         auto *connectToServer = engine_.rootObjects()[0]->findChild<QObject *>("connectToServer");
         disconnect(connectToServer, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)) );
 
-        client_.askForUserList();
-//        auto *getUserList = engine_.rootObjects()[0]->findChild<QObject *>("userList");
-//      connect(getUserList, SIGNAL(getUserList()), &client_, SLOT(askForUserList()));
+
 
         connect(&client_, &Client::userListProcessed, this, [this]( QVector<QString> users ){
                 QStringList dataList;
@@ -49,7 +48,22 @@ ClientGUIApplication::ClientGUIApplication(int argc, char *argv[])
                 emit helper_.connectionConfirmed();
         });
 
-        cauto *setReceiver = engine_.rootObjects()[0]->findChild<QObject *>("setReceiver");
+        client_.askForUserList();
+
+        connect(&messageHistoryLoader_, &MessageHistoryLoader::usersWhoWrote, this, [this]( QStringList users ){
+            qDebug() << "Processing message list";
+                engine_.rootContext()->setContextProperty("myMessages", QVariant::fromValue(users));
+                emit helper_.connectionConfirmed();
+        });
+
+        messageHistoryLoader_.getUsersWhoWrote();
+
+
+
+
+
+
+        auto *setReceiver = engine_.rootObjects()[0]->findChild<QObject *>("setReceiver");
         connect(setReceiver, SIGNAL(setReceiver(QString)), &client_, SLOT(connectToServer(QString)));
 
         connect(&client_, &Client::messageReceived, this, [this, history](){

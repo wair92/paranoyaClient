@@ -1,17 +1,27 @@
 {
-	"messages": [{
+	"Janka": [{
 			"Receiver": "Ford",
-			"Sender": "Sender",
 			"Message": "Message1"
 		},
 		{
 			"Receiver": "Ford",
-			"Sender": "Sender",
 			"Message": "Message2"
 		},
 		{
 			"Receiver": "Ford",
-			"Sender": "Sender",
+			"Message": "Message3"
+		}
+	],
+	"Katka": [{
+			"Receiver": "Ford",
+			"Message": "Message1"
+		},
+		{
+			"Receiver": "Ford",
+			"Message": "Message2"
+		},
+		{
+			"Receiver": "Ford",
 			"Message": "Message3"
 		}
 	]

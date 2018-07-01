@@ -17,7 +17,8 @@ SOURCES += \
     client.cpp \
     message.cpp \
     clientguiapplication.cpp \
-    configloader.cpp
+    configloader.cpp \
+    messagehistoryloader.cpp
 
 RESOURCES += qml.qrc
 
@@ -36,18 +37,19 @@ HEADERS += \
     client.h \
     message.h \
     clientguiapplication.h \
-    configloader.h
+    configloader.h \
+    messagehistoryloader.h
 
 DISTFILES += \
     README.MD \
     config.json
 
 macx: {
-    copydata.commands = $(COPY) $$PWD/config.json $$OUT_PWD/ChatClient.app/Contents/MacOS
+    copydata.commands = $(COPY) $$PWD/config.json $$OUT_PWD/ChatClient.app/Contents/MacOS &&  $(COPY) $$PWD/message_history.json $$OUT_PWD/ChatClient.app/Contents/MacOS
 }
 
 unix:!macx {
-     copydata.commands = $(COPY) $$PWD/config.json $$OUT_PWD/
+     copydata.commands = $(COPY) $$PWD/config.json $$OUT_PWD/ && $(COPY) $$PWD/message_history.json $$OUT_PWD/
 }
 
 first.depends = $(first) copydata
