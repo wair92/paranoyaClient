@@ -24,14 +24,23 @@ public:
     ClientGUIApplication(int argc, char *argv[]);
     virtual ~ClientGUIApplication() = default;
     int run();
-private slots:
+public slots:
     void reconnect();
+    void chatOpenedd();
 private:
     QGuiApplication app_;
     QQmlApplicationEngine engine_;
     Client client_;
     Helper helper_;
     MessageHistoryLoader messageHistoryLoader_;
+
+    QTimer myTimer;
+
+    QObject* connectToServer_ {nullptr};
+    QObject* message_ {nullptr};
+    QObject* history_ {nullptr};
+    QObject* sendMessage_ {nullptr};
+    QObject* messageInput_ {nullptr};
 };
 
 #endif // CLIENTAPPLICATION_H

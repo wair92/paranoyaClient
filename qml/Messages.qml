@@ -1,6 +1,9 @@
 import QtQuick 2.0
 
+
 Item {
+    id: itemm
+    signal chatOpened()
     Rectangle {
         width: parent.width
         height: parent.height
@@ -20,11 +23,10 @@ Item {
                         }
                     }
                     MouseArea{
-                        id: setReceiver
                         anchors.fill: parent
-                        signal setReceiver(string receiver)
                         onClicked:{
-                            setReceiver.setReceiver( modelData )
+                            itemm.chatOpened()
+                            stackView.push("qrc:/qml/Chat.qml")
                         }
                     }
                 }

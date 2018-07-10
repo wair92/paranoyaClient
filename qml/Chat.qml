@@ -5,14 +5,14 @@ import QtQuick.Controls 1.4
 
 
 Item{
+    id: chat
+    objectName: "chat"
+    signal chatReady()
     GridLayout{
-            property bool logged: true
             width: parent.width
             height: 330
             rows: 6
             columns: 1
-            id: afterLoginContainer
-            visible: logged
 
             Label{
                 id: username
@@ -20,27 +20,20 @@ Item{
             }
 
             Rectangle{
-                id: disconnectToServer
-                objectName: "disconnectToServer"
-                signal disconnectionClicked()
-                color: "green"
+                color: "#343537"
                 Layout.preferredHeight: 25
                 Layout.preferredWidth: parent.width
 
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        parent.color = "yellow"
-                        disText.color = "black"
-                        stackView.pop(null);
-                        disconnectToServer.disconnectionClicked()
-
+                        stackView.pop();
                     }
                 }
 
                 Text{
                     id: disText
-                    text: "Logout"
+                    text: "Back"
                     color: "white"
                     anchors.centerIn: parent
                     height: 20
@@ -81,10 +74,13 @@ Item{
             }
 
             Rectangle{
+                Component.onCompleted: {
+                    chat.chatReady()
+                }
                 id: sendText
                 objectName: "sendText"
                 signal sendMessageClicked(string receiver)
-                color: "green"
+                color: "#343537"
                 Layout.preferredHeight: 25
                 Layout.preferredWidth: parent.width
 
