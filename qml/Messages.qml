@@ -1,16 +1,11 @@
 import QtQuick 2.0
 
-
 Item {
     id: itemm
-    signal chatOpened()
-    signal messageListCompleted()
+    signal chatOpened(string receiver)
     Rectangle {
         width: parent.width
         height: parent.height
-        Component.onCompleted: {
-            itemm.messageListCompleted()
-        }
 
         Component {
             id: contactDelegate
@@ -29,7 +24,7 @@ Item {
                     MouseArea{
                         anchors.fill: parent
                         onClicked:{
-                            itemm.chatOpened()
+                            itemm.chatOpened(modelData)
                             stackView.push("qrc:/qml/Chat.qml")
                         }
                     }

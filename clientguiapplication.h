@@ -17,7 +17,7 @@ public:
 signals:
    void connectionConfirmed();
 public slots:
-   void onChatOpened();
+   void onChatOpened(QString receiver);
    void sendMessage(QString message);
    void setMessage(QString message);
 private:
@@ -33,7 +33,7 @@ public:
     int run();
 public slots:
     void reconnect();
-    void chatOpenedd();
+    void chatOpenedd(QString receiver);
     void sendMessage(QString message);
     void setMessage(QString message);
 private:

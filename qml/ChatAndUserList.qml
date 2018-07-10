@@ -11,7 +11,7 @@ Item {
         Messages {
             onChatOpened: {
                 console.log("Chat opened")
-                helper.onChatOpened()
+                helper.onChatOpened(receiver)
             }
         }
 

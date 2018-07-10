@@ -14,11 +14,6 @@ Item{
             rows: 6
             columns: 1
 
-            Label{
-                id: username
-                text: "uname"
-            }
-
             Rectangle{
                 color: "#343537"
                 Layout.preferredHeight: 25
@@ -43,7 +38,8 @@ Item{
 
             TextArea{
                 id: receiver
-                text: "Receiver"
+                text: Receiver
+                readOnly: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 Layout.preferredHeight: 35
                 Layout.preferredWidth: parent.width

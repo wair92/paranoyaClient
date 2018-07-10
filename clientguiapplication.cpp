@@ -67,14 +67,10 @@ void ClientGUIApplication::reconnect()
     connect(connectToServer_, SIGNAL(connectionClicked(QString)), &client_, SLOT(connectToServer(QString)));
 }
 
-void ClientGUIApplication::chatOpenedd()
+void ClientGUIApplication::chatOpenedd(QString receiver)
 {
     qDebug() << "Chat Openedd";
-    sendMessage_ = engine_.rootObjects()[0]->findChild<QObject *>("sendText");
-    messageInput_ = engine_.rootObjects()[0]->findChild<QObject *>("messageInput");
-
-    //connect(sendMessage_, SIGNAL(sendMessageClicked(QString)), &client_, SLOT(sendMessage(QString)));
-    //connect(messageInput_, SIGNAL(messageChangedd(QString)), &client_, SLOT(setMessage(QString)));
+    engine_.rootContext()->setContextProperty("Receiver", QVariant::fromValue(receiver));
 
     connect(&client_, &Client::messageReceived, this, [this](){
         qDebug() << "Message received";
@@ -103,7 +99,9 @@ Helper::Helper(ClientGUIApplication* mainApp):
 
 }
 
-void Helper::onChatOpened(){ mainApp_->chatOpenedd(); }
+void Helper::onChatOpened(QString receiver){
+    mainApp_->chatOpenedd(receiver);
+}
 
 void Helper::sendMessage(QString message)
 {
