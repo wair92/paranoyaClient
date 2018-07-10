@@ -3,10 +3,6 @@ import QtQuick.Controls 2.4
 Item {
     id: list
     objectName: "list"
-    signal chatOpened();
-    onChatOpened: {
-        console.log("Emitting signal!!!")
-    }
     SwipeView {
         id: swipeView
         anchors.fill: parent
@@ -15,7 +11,7 @@ Item {
         Messages {
             onChatOpened: {
                 console.log("Chat opened")
-                list.chatOpened()
+                helper.onChatOpened()
             }
         }
 

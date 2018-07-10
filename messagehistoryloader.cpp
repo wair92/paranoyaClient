@@ -66,5 +66,5 @@ bool MessageHistoryLoader::parseFile()
     }
     QJsonObject object = messageHistory.object();
     qDebug() << object.keys();
-
+    return true;
 }

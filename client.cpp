@@ -73,7 +73,7 @@ QString Client::getMessage() const
     return message_;
 }
 
-void Client::setMessage(const QString &message)
+void Client::setMessage(QString message)
 {
     message_ = message;
 }

@@ -30,7 +30,7 @@ public slots:
     void connectToServer(QString username);
     void disconnectToServer();
     void sendMessage(QString receiver);
-    void setMessage(const QString& message);
+    void setMessage(QString message);
     void askForUserList();
     void setReceiver(QString receiver);
 

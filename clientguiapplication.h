@@ -6,15 +6,22 @@
 #include "client.h"
 #include "messagehistoryloader.h"
 
+class ClientGUIApplication;
+
 class Helper: public QObject{
-    //Class for calling qml function
     Q_OBJECT
 public:
-    Helper() = default;
+    Helper(ClientGUIApplication* mainApp);
     virtual ~Helper() = default;
     using QObject::QObject;
 signals:
    void connectionConfirmed();
+public slots:
+   void onChatOpened();
+   void sendMessage(QString message);
+   void setMessage(QString message);
+private:
+   ClientGUIApplication* mainApp_;
 };
 
 class ClientGUIApplication: public QObject
@@ -27,6 +34,8 @@ public:
 public slots:
     void reconnect();
     void chatOpenedd();
+    void sendMessage(QString message);
+    void setMessage(QString message);
 private:
     QGuiApplication app_;
     QQmlApplicationEngine engine_;

@@ -60,14 +60,15 @@ Item{
             }
 
             TextArea{
-                signal messageChangedd(string message)
+                //signal messageChangedd(string message)
                 id: messageInput
-                objectName: "messageInput"
+                //objectName: "messageInput"
                 text: "Message"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 onTextChanged: {
                     console.log("Input accepted")
-                    messageInput.messageChangedd(messageInput.text)
+                    //messageInput.messageChangedd(messageInput.text)
+                    helper.setMessage(messageInput.text)
                 }
                 Layout.preferredHeight: 120
                 Layout.preferredWidth: parent.width
@@ -78,8 +79,8 @@ Item{
                     chat.chatReady()
                 }
                 id: sendText
-                objectName: "sendText"
-                signal sendMessageClicked(string receiver)
+                //objectName: "sendText"
+                //signal sendMessageClicked(string receiver)
                 color: "#343537"
                 Layout.preferredHeight: 25
                 Layout.preferredWidth: parent.width
@@ -87,9 +88,10 @@ Item{
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        sendText.sendMessageClicked(receiver.text)
+                        //sendText.sendMessageClicked(receiver.text)
                         history.historyText = history.historyText.concat(messageInput.text)
                         history.historyText = history.historyText.concat("\n")
+                        helper.sendMessage(receiver.text)
                     }
                 }
 
